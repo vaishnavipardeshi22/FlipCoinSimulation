@@ -29,5 +29,5 @@ do
 done
 
 #PERCENTAGE OF SINGLET COMBINATION FOR HEAD AND TAIL
-singletHeadPercentage=`echo " scale=2; $headCount / $numberOfCoinFlip * 100" | bc`
-singletTailPercentage=`echo " scale=2; $tailCount / $numberOfCoinFlip * 100" | bc`
+singletHeadPercentage=`echo "scale=2; $headCount * 100 / $numberOfCoinFlip" | bc`
+singletTailPercentage=`echo "scale=2; $tailCount *100 / $numberOfCoinFlip" | bc`
