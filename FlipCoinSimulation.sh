@@ -4,30 +4,46 @@ echo " ****************************** WELCOME TO FLIP COIN SIMULATION **********
 
 #CONSTANT
 IS_FLIP=0
+NUMBER_OF_COIN=2
 
-#VARIABLES
-headCount=0
-tailCount=0
-
-#DECLARE DICTIONARY TO STORE SINGLET COMBINATION OF FLIP COIN
-declare -A singletFlip
+#DECLARE DICTIONARY TO STORE DOUBLET COMBINATION OF FLIP COIN
+declare -A doubletFlip
 
 #TAKE USER INPUT FOR NUMBER OF COIN FLIPS
 read -p "Enter the Number of Coin Flip : " numberOfCoinFlip
 
-#STORE HEAD COUNT AND TAIL COUNT IN DICTIONARY
-for(( flip=0; flip<$numberOfCoinFlip; flip++ ))
-do
-	randomFlip=$(( RANDOM % 2 ))
+#STORE DOUBLET COMBINATION IN DICTIONARY
+function doublet()
+{
+	for(( flip=0; flip<$numberOfCoinFlip; flip++ ))
+	do
+		for(( coin=0; coin<$NUMBER_OF_COIN; coin++ ))
+		do
+			randomFlip=$(( RANDOM % 2 ))
 
-	if [ $randomFlip -eq $IS_FLIP ]
-	then
-		singletFlip[HEAD]=$((++headCount))
-	else
-		singletFlip[TAIL]=$((++tailCount))
-	fi
-done
+			if [ $randomFlip -eq $IS_FLIP ]
+			then
+				coinSide+=H
+			else
+				coinSide+=T
+			fi
+		done
+		((doubletFlip[$coinSide]++))
+		coinSide=""
+	done
+}
 
-#PERCENTAGE OF SINGLET COMBINATION FOR HEAD AND TAIL
-singletHeadPercentage=`echo "scale=2; $headCount * 100 / $numberOfCoinFlip" | bc`
-singletTailPercentage=`echo "scale=2; $tailCount *100 / $numberOfCoinFlip" | bc`
+#CALCULATE PERCENTAGE OF DOUBLET COMBINATION
+function calculatePercentage()
+{
+	for i in ${!doubletFlip[@]}
+	do
+		doubletFlip[$i]=`echo "scale=2; ${doubletFlip[$i]} * 100 / $numberOfCoinFlip" | bc`
+	done
+}
+
+#FUNCTION CALL TO FIND DOUBLET COMBINATION
+doublet
+
+#FUNCTION CALL TO CALCULATE PERCENTAGE OF DOUBLET COMBINATION
+calculatePercentage
