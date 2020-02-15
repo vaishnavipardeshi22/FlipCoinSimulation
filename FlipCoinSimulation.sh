@@ -4,16 +4,16 @@ echo " ****************************** WELCOME TO FLIP COIN SIMULATION **********
 
 #CONSTANT
 IS_FLIP=0
-NUMBER_OF_COIN=2
+NUMBER_OF_COIN=3
 
-#DECLARE DICTIONARY TO STORE DOUBLET COMBINATION OF FLIP COIN
-declare -A doubletFlip
+#DECLARE DICTIONARY TO STORE TRIPLET COMBINATION OF FLIP COIN
+declare -A tripletFlip
 
 #TAKE USER INPUT FOR NUMBER OF COIN FLIPS
 read -p "Enter the Number of Coin Flip : " numberOfCoinFlip
 
-#STORE DOUBLET COMBINATION IN DICTIONARY
-function doublet()
+#STORE TRIPLET COMBINATION IN DICTIONARY
+function triplet()
 {
 	for(( flip=0; flip<$numberOfCoinFlip; flip++ ))
 	do
@@ -28,22 +28,22 @@ function doublet()
 				coinSide+=T
 			fi
 		done
-		((doubletFlip[$coinSide]++))
+		((tripletFlip[$coinSide]++))
 		coinSide=""
 	done
 }
 
-#CALCULATE PERCENTAGE OF DOUBLET COMBINATION
+#CALCULATE PERCENTAGE OF TRIPLET COMBINATION
 function calculatePercentage()
 {
-	for i in ${!doubletFlip[@]}
+	for i in ${!tripletFlip[@]}
 	do
-		doubletFlip[$i]=`echo "scale=2; ${doubletFlip[$i]} * 100 / $numberOfCoinFlip" | bc`
+		tripletFlip[$i]=`echo "scale=2; ${tripletFlip[$i]} * 100 / $numberOfCoinFlip" | bc`
 	done
 }
 
-#FUNCTION CALL TO FIND DOUBLET COMBINATION
-doublet
+#FUNCTION CALL TO FIND TRIPLET COMBINATION
+triplet
 
-#FUNCTION CALL TO CALCULATE PERCENTAGE OF DOUBLET COMBINATION
+#FUNCTION CALL TO CALCULATE PERCENTAGE OF TRIPLET COMBINATION
 calculatePercentage
