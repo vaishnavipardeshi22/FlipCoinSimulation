@@ -109,25 +109,36 @@ function sortCombination()
 	echo ${arrayKeyValues[@]}
 }
 
-#FUNCTION CALL TO FIND SINGLET, DOUBLET AND TRIPLET COMBINATION
-coinFlip $SINGLET
-coinFlip $DOUBLET
-coinFlip $TRIPLET
+echo "Enter 1 For Singlet Combination"
+echo "Enter 2 For Doublet Combination"
+echo "Enter 3 For Triplet Combination"
 
-#FUNCTION CALL TO CALCULATE PERCENTAGE OF SINGLET, DOUBLET AND TRIPLET COMBINATION
-calculatePercentage $SINGLET
-calculatePercentage $DOUBLET
-calculatePercentage $TRIPLET
+read -p "Enter Your Choice: " choice
 
-#FUNCTION CALL TO SORT AND GET WINNING COMBINATION FOR SINGLET, DOUBLET AND TRIPLET
-arraySinglet="$(dictionaryConvert ${!singletFlip[@]} ${singletFlip[@]})"
-arraySinglet=($(sortCombination $arraySinglet))
-singletWinningCombination=${arraySinglet[0]}
-
-arrayDoublet="$(dictionaryConvert ${!doubletFlip[@]} ${doubletFlip[@]}})"
-arrayDoublet=($(sortCombination $arrayDoublet))
-doubletWinningCombination=${arrayDoublet[0]}
-
-arrayTriplet="$(dictionaryConvert ${!tripletFlip[@]} ${tripletFlip[@]})"
-arrayTriplet=($(sortCombination $arrayTriplet))
-tripletWinningCombination=${arrayTriplet[0]}
+#USING CASE STATEMENT GET SINGLET, DOUBLET AND TRIPLET COMBINATION
+case $choice in
+	$SINGLET)
+		coinFlip $SINGLET
+		calculatePercentage $SINGLET
+		arraySinglet="$(dictionaryConvert ${!singletFlip[@]} ${singletFlip[@]})"
+		arraySinglet=($(sortCombination $arraySinglet))
+		singletWinningCombination=${arraySinglet[0]}
+		;;
+	$DOUBLET)
+		coinFlip $DOUBLET
+		calculatePercentage $DOUBLET
+		arrayDoublet="$(dictionaryConvert ${!doubletFlip[@]} ${doubletFlip[@]})"
+		arrayDoublet=($(sortCombination $arrayDoublet))
+		doubletWinningCombination=${arrayDoublet[0]}
+		;;
+	$TRIPLET)
+		coinFlip $TRIPLET
+		calculatePercentage $TRIPLET
+		arrayTriplet="$(dictionaryConvert ${!tripletFlip[@]} ${tripletFlip[@]})"
+		arrayTriplet=($(sortCombination $arrayTriplet))
+		tripletWinningCombination=${arrayTriplet[0]}
+		;;
+	*)
+		echo "Enter the value between 1 to 3"
+		;;
+esac
