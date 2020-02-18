@@ -52,26 +52,17 @@ function coinFlip()
 function calculatePercentage()
 {
 	local NUMBER_OF_COIN=$1
+	array=("$@")
 
-	if [ $NUMBER_OF_COIN -eq $SINGLET ]
-	then
-		for index in ${!singletFlip[@]}
-		do
-			singletFlip[$index]=`echo "scale=2; ${singletFlip[$index]} * 100 / $numberOfCoinFlip" | bc`
-		done
-	elif [ $NUMBER_OF_COIN -eq $DOUBLET ]
-	then
-		for index in ${!doubletFlip[@]}
-		do
-			doubletFlip[$index]=`echo "scale=2; ${doubletFlip[$index]} * 100 / $numberOfCoinFlip" | bc`
-		done
-	else
-		for index in ${!tripletFlip[@]}
-		do
-			tripletFlip[$index]=`echo "scale=2; ${tripletFlip[$index]} * 100 / $numberOfCoinFlip" | bc`
-		done
-	fi
+	for index in ${!array[@]}
+	do
+		key=$(echo ${array[index]} | awk -F: '{print $1}')
+		value=$(echo ${array[index]} | awk -F: '{print $2}')
+		array[$index]=$key:`echo "scale=2; $value * 100 / $numberOfCoinFlip" | bc`
+	done
+	echo ${array[@]}
 }
+
 #FUNCTION TO CONVERT DICTIONARY TO ARRAY
 function dictionaryConvert()
 {
@@ -119,26 +110,27 @@ read -p "Enter Your Choice: " choice
 case $choice in
 	$SINGLET)
 		coinFlip $SINGLET
-		calculatePercentage $SINGLET
 		arraySinglet="$(dictionaryConvert ${!singletFlip[@]} ${singletFlip[@]})"
-		arraySinglet=($(sortCombination $arraySinglet))
+		arraySinglet=($(calculatePercentage ${arraySinglet[@]}))
+		arraySinglet=($(sortCombination ${arraySinglet[@]}))
 		singletWinningCombination=${arraySinglet[0]}
 		;;
 	$DOUBLET)
 		coinFlip $DOUBLET
-		calculatePercentage $DOUBLET
 		arrayDoublet="$(dictionaryConvert ${!doubletFlip[@]} ${doubletFlip[@]})"
-		arrayDoublet=($(sortCombination $arrayDoublet))
+		arrayDoublet=($(calculatePercentage ${arrayDoublet[@]}))
+		arrayDoublet=($(sortCombination ${arrayDoublet[@]}))
 		doubletWinningCombination=${arrayDoublet[0]}
 		;;
 	$TRIPLET)
 		coinFlip $TRIPLET
-		calculatePercentage $TRIPLET
 		arrayTriplet="$(dictionaryConvert ${!tripletFlip[@]} ${tripletFlip[@]})"
-		arrayTriplet=($(sortCombination $arrayTriplet))
+		arrayTriplet=($(calculatePercentage ${arrayTriplet[@]}))
+		arrayTriplet=($(sortCombination ${arrayTriplet[@]}))
 		tripletWinningCombination=${arrayTriplet[0]}
 		;;
 	*)
 		echo "Enter the value between 1 to 3"
 		;;
 esac
+
